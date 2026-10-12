@@ -18,12 +18,6 @@
 - **修复模型目录不自动创建**：`File.mkdirs()` 失败不抛异常、只返回 `false`，而返回值无人检查 —— 全新安装尚未授权时创建失败**完全静默**，日志与界面都看不出来，现象上就像「这个功能没了」
 - **修复「授权后仍要重启 App 才会建目录」**：授权回调走的是 `rescan()`，而它原来只扫描、不建目录；现在 `attach()` 与 `rescan()` 都会调用幂等的 `ensureModelDirs()`，授权后当场生效
 
-### 工程与文档
-
-- 骁龙引擎库从 `app/src` 迁移到 `engine/android-snapdragon/jniLibs`（不进 git，改由 Release 附件提供），文档与脚本路径同步迁移
-- 引擎 `.so` 的「安装时解压」改由 `build.gradle.kts` 的 `useLegacyPackaging = true` 统一声明（原先手写在清单里），AGP 8 据此写入 `android:extractNativeLibs="true"`，消除两条构建警告
-- README 重写：新增「真机实测」实拍与三档速度、「引擎库准备」折叠、精简构建步骤、补全目录说明与发布流程
-
 ## v1.0.2
 
 ### 功能优化

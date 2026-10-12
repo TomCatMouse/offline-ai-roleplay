@@ -1,10 +1,5 @@
 内置骁龙 llama.cpp 引擎，仅 arm64-v8a，离线本地推理，全程不联网。
 
-## 发布资源
-
-- `{{ASSET}}`：正式版安装包（本地规范文件名 `{{LOCAL}}`，Release 页面标题即 `{{TAG}}`），下载后直接安装即可
-- `engine-libs-arm64-v8a-b11558.zip`（59 MB，sha256 以 `6E9B6F4C` 开头、以 `DDB4` 结尾）：真机包所需的骁龙引擎库，**只有在自己构建真机包时才需要** —— 在项目根目录新建 `engine\android-snapdragon\` 后解压进去即可（解压后为 `engine/android-snapdragon/jniLibs/arm64-v8a/` 下的 27 个 `.so`），详见仓库根目录 [BUILD.md](https://github.com/TomCatMouse/offline-ai-roleplay/blob/main/BUILD.md) 第 1 步
-
 ## 本次更新
 
 {{CHANGELOG}}

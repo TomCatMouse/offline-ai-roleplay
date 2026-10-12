@@ -12,18 +12,6 @@
 | --- | --- |
 | <img src="docs/images/home.png" width="400" alt="首页：角色网格、搜索、收藏、稀有度与等级"> | <img src="docs/images/new-character.png" width="400" alt="新建角色：名字、说话风格、性格描述、标签、背景故事、开场白，可一键 AI 补全"> |
 
-## 真机实测
-
-两台真机的实际运行截图（魅族 21 Pro / 骁龙 8 Gen 3 / SM8650 与红米 K40 / 骁龙 888 / SM8350）—— 模型加载、引擎起服务、逐字生成全部在手机本机完成，全程不联网：
-
-| 魅族 21 Pro · NPU · Hexagon 档跑通 | 魅族 21 Pro · GPU · Adreno 档真实对话 |
-| --- | --- |
-| <img src="docs/images/real-npu-engine.png" width="400" alt="魅族 21 Pro 设置页：NPU · Hexagon 档已连接，接口状态「引擎运行中」，日志显示 model loaded 与 listening on 127.0.0.1:8080"> | <img src="docs/images/real-gpu-chat.png" width="400" alt="魅族 21 Pro 对话页：GPU · Adreno 档下模型连续两轮的角色扮演回复，全部为端侧生成"> |
-
-| 魅族 21 Pro · NPU 档真实对话回复 | 红米 K40 · CPU 档跑通（armv8.2 自编库无 SIGILL） |
-| --- | --- |
-| <img src="docs/images/real-npu-chat.png" width="400" alt="魅族 21 Pro 对话页：NPU · Hexagon 档下模型生成的角色扮演回复"> | <img src="docs/images/real-k40-cpu.png" width="400" alt="红米 K40 设置页：CPU 档已连接，接口状态「引擎运行中」，日志显示 model loaded 与 listening，说明 armv8.2 自编引擎库在该机型上不再触发 SIGILL"> |
-
 ## 功能概览
 
 - 角色卡：姓名、性格、说话风格、背景故事、开场白、标签与稀有度，支持 AI 批量补全
