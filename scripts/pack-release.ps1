@@ -1,20 +1,25 @@
-# Pack release APK: auto version bump + build + output to dist\<CN_DIR>
+# Pack release APK: build + output to dist\<CN_DIR>  (does NOT bump the version by default)
 #
 # Usage:
-#   .\scripts\pack-release.ps1                # auto: bump patch if sources changed
-#   .\scripts\pack-release.ps1 -Bump patch    # force patch +1  (bug fix)
-#   .\scripts\pack-release.ps1 -Bump minor    # force minor +1  (feature)
-#   .\scripts\pack-release.ps1 -Bump major    # force major +1  (big change)
-#   .\scripts\pack-release.ps1 -Bump none     # keep version, just repack
+#   .\scripts\pack-release.ps1                # default: keep the current version, just build
+#   .\scripts\pack-release.ps1 -Bump patch    # escape hatch: force patch +1 (bug fix)
+#   .\scripts\pack-release.ps1 -Bump minor    # escape hatch: force minor +1 (feature)
+#   .\scripts\pack-release.ps1 -Bump major    # escape hatch: force major +1 (big change)
+#   .\scripts\pack-release.ps1 -Bump auto     # escape hatch: bump patch if sources changed
 #
-# Auto-bump rule:
-#   Hash app/src + app/build.gradle.kts + engine/android-snapdragon/jniLibs,
-#   compare with scripts/version-state.json.
-#   If the hash differs (= feature update or bug fix), bump patch and versionCode +1.
+# Version rule (user requirement):
+#   The version number advances ONLY when a release is actually published to GitHub.
+#   Right after a successful publish, run scripts\bump-version.ps1 (patch +1 and
+#   versionCode +1), then commit and push. Until then every local build keeps the
+#   current version -- packing any number of times never consumes a version number.
+#
+#   -Bump auto stays available as an escape hatch: it hashes app/src +
+#   app/build.gradle.kts + engine/android-snapdragon/jniLibs, compares the result
+#   with scripts/version-state.json and bumps patch when the hash differs.
 
 param(
     [ValidateSet("auto", "patch", "minor", "major", "none")]
-    [string]$Bump = "auto"
+    [string]$Bump = "none"
 )
 
 $ErrorActionPreference = "Stop"
@@ -106,8 +111,12 @@ if ($needBump) {
 # ---- build ----
 Write-Host ""
 Write-Host "=== build physRelease ===" -ForegroundColor Cyan
-& (Join-Path $root "gradlew.bat") :app:assemblePhysRelease --console=plain
-if ($LASTEXITCODE -ne 0) { throw "build failed" }
+# Do NOT trust $LASTEXITCODE here: on this setup gradlew.bat exits with 0 even when
+# the build FAILS (verified), so the old check was dead code and a stale APK from a
+# previous build could be copied out as if it were a fresh one. Parse the output.
+$buildOut = (& (Join-Path $root "gradlew.bat") :app:assemblePhysRelease --console=plain 2>&1 | Out-String)
+$buildOut.TrimEnd() -split "`r?`n" | ForEach-Object { Write-Host $_ }
+if ($buildOut -notmatch "BUILD SUCCESSFUL") { throw "gradle build failed - see output above" }
 
 # ---- copy to dist\<CN_DIR> ----
 $distDir = Join-Path $root ("dist\" + $dirName)

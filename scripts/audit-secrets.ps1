@@ -51,7 +51,12 @@ if (-not $remoteUrl) {
     $remoteSha = "(no origin remote)"
 } elseif ($tok -and $remoteUrl -match '^(https://)(.+)$') {
     $authUrl = $Matches[1] + "x-access-token:$tok@" + $Matches[2]
-    $remoteOut = & git ls-remote $authUrl main 2>$null
+    # -c credential.helper= : the token is already inside the URL, so no helper is
+    # needed -- and more importantly the system-level GCM must not store this
+    # authentication into the credential manager. It once left a stray
+    # "git:https://github.com" entry (username x-access-token) behind.
+    $env:GIT_TERMINAL_PROMPT = "0"
+    $remoteOut = & git -c credential.helper= ls-remote $authUrl main 2>$null
     if ($remoteOut) { $remoteSha = ($remoteOut -split '\s+')[0] }
 }
 Write-Host "  local  main: $localSha"

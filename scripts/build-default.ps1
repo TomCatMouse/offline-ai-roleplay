@@ -1,4 +1,4 @@
-﻿<#
+<#
   默认包（MuMu 版）打包脚本 —— 和真机包（Flyme 版）是完全独立的两套逻辑。
 
   默认约定（用户 2026-07 明确要求）：
@@ -30,8 +30,11 @@ $apk = Join-Path $root "app\build\outputs\apk\$variant\app-$variant.apk"
 $dist = Join-Path $root 'dist\MuMu版'
 
 Write-Host "[MuMu 版] 1/3 编译（$variant，不含引擎）..."
-& (Join-Path $root 'gradlew.bat') ":app:assemble$($variant.Substring(0,1).ToUpper() + $variant.Substring(1))" --console=plain
-if ($LASTEXITCODE -ne 0) { throw '编译失败' }
+# 注意：gradlew.bat 构建失败时返回的退出码也是 0（实测），所以不能只看 $LASTEXITCODE，
+# 否则会把上一版残留的 APK 当成新产物拷进 dist。这里改看构建输出。
+$buildOut = (& (Join-Path $root 'gradlew.bat') ":app:assemble$($variant.Substring(0,1).ToUpper() + $variant.Substring(1))" --console=plain 2>&1 | Out-String)
+$buildOut.TrimEnd() -split "`r?`n" | ForEach-Object { Write-Host $_ }
+if ($buildOut -notmatch 'BUILD SUCCESSFUL') { throw '编译失败（看上面的构建输出）' }
 if (!(Test-Path $apk)) { throw "没找到产物：$apk" }
 
 $version = (Select-String -Path (Join-Path $root 'app\build.gradle.kts') -Pattern 'versionName = "([^"]+)"' |

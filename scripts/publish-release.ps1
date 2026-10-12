@@ -18,6 +18,10 @@
 #   4. create an ANNOTATED tag vX.Y.Z on main HEAD
 #      (message = the full release notes: update record + device support + model link)
 #   5. create release (body = same notes) and upload the APK
+#   6. POST-PUBLISH (manual, by design): run scripts\bump-version.ps1 to advance to the
+#      next version (patch +1 and versionCode +1), then commit and push. The version
+#      number only ever advances after a release has actually gone out; before that,
+#      every local build keeps the current version.
 #
 # IMPORTANT - GitHub asset name limitation:
 #   GitHub release asset names must be ASCII. Non-ASCII characters are

@@ -1,4 +1,4 @@
-﻿<#
+<#
   真机包（Flyme 版 / phys）打包脚本 —— 和默认包（MuMu 版）是完全独立的两套逻辑。
 
   重要约定（用户 2026-07 明确要求）：
@@ -56,8 +56,11 @@ $apk = Join-Path $root 'app\build\outputs\apk\phys\app-phys.apk'
 $dist = Join-Path $root 'dist\Flyme版'
 
 Write-Host '[Flyme 版] 1/5 编译（内置骁龙引擎，约 200MB 原生库）...'
-& (Join-Path $root 'gradlew.bat') ':app:assemblePhys' --console=plain
-if ($LASTEXITCODE -ne 0) { throw '编译失败' }
+# 注意：gradlew.bat 构建失败时返回的退出码也是 0（实测），所以不能只看 $LASTEXITCODE，
+# 否则会把上一版残留的 APK 当成新产物拷进 dist。这里改看构建输出。
+$buildOut = (& (Join-Path $root 'gradlew.bat') ':app:assemblePhys' --console=plain 2>&1 | Out-String)
+$buildOut.TrimEnd() -split "`r?`n" | ForEach-Object { Write-Host $_ }
+if ($buildOut -notmatch 'BUILD SUCCESSFUL') { throw '编译失败（看上面的构建输出）' }
 if (!(Test-Path $apk)) { throw "没找到产物：$apk" }
 
 $version = (Select-String -Path (Join-Path $root 'app\build.gradle.kts') -Pattern 'versionName = "([^"]+)"' |
