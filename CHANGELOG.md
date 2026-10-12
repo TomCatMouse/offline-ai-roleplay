@@ -5,6 +5,24 @@
 
 > 想追每个修复背后的根因、复现步骤与验证数据，见 [`docs/android-armv8.2-engine-rebuild.md`](docs/android-armv8.2-engine-rebuild.md)。
 
+## v1.0.4
+
+> 说明：本版没有改动 App 的功能代码，APK 与 1.0.3 在功能上完全一致；改动集中在
+> 构建守卫、CI、项目文档与发布流程。仓库已转为公开，这一版是把"开源后别人第一次
+> 构建"最容易踩的坑补掉。
+
+### 功能优化
+
+- **新增真机包构建守卫**：`engine/android-snapdragon/jniLibs/arm64-v8a` 下引擎库不足 27 个时，构建会在 `:app:prePhysBuild` 阶段直接报错并给出三步修复指引。此前 Gradle 对缺失的 `jniLibs` 目录不报错，会打出一个 `BUILD SUCCESSFUL` 但里面一个引擎字节都没有的「真机包」，装到手机上推理完全不可用且看不出原因
+- **新增 GitHub Actions 工作流**：在 `windows-latest` 上构建默认包（默认包不需要引擎库），并自检「缺引擎库时真机包必须被守卫拦下、且不产出任何废包」
+- **补齐开源项目文件**：`CONTRIBUTING.md`、`SECURITY.md`、Issue 模板（Bug 报告 / 功能建议）与 PR 模板；仓库社区健康度由 42% 提升到 85%，并开启私密漏洞上报入口
+- **版本号规则明确化**：版本号只在**发布成功之后**递增（新增 `scripts/bump-version.ps1`），发布之前的任意次本地打包不再消耗版本号
+
+### BUG修复
+
+- **修复打包脚本「构建失败却当成成功」**：本仓库的 `gradlew.bat` 在构建失败时返回的退出码依然是 0（官方原版 wrapper 自身的行为，直接问 `cmd` 内层 `%ERRORLEVEL%` 同样是 0），导致 `scripts/pack-release.ps1`、`build-default.ps1`、`build-phys.ps1` 里的 `if ($LASTEXITCODE -ne 0) { throw ... }` 形同虚设 —— 构建失败时脚本会继续执行，把上一版残留的 APK 当成新产物拷进 `dist`，并把 `version-state.json` 记为打包成功。现改为校验构建输出里是否出现 `BUILD SUCCESSFUL`
+- **修复 `audit-secrets.ps1` 会在 Windows 凭据管理器留下残留**：远端探测改为 `git -c credential.helper= ls-remote` 并关闭终端提示，避免系统级 GCM 把这次认证写成一条 `git:https://github.com` 记录
+
 ## v1.0.3
 
 ### 功能优化
