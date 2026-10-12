@@ -18,8 +18,8 @@ android {
         //   · 发布之前的任何本地改动、任意次打包，都保持当前版本，不吃版本号；
         //   · scripts\pack-release.ps1 默认已改为只打包、不动版本号。
         // 注意：若目标机已装了更高的 versionCode，`install -r` 会因「降级」被拒，需先卸载或用 `adb install -r -d`。
-        versionCode = 5
-        versionName = "1.0.4"
+        versionCode = 6
+        versionName = "1.0.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
