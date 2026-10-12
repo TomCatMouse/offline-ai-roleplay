@@ -39,8 +39,8 @@ __pycache__/
 /models/gguf/
 # PC 端 Windows x86_64 版 llama.cpp（94 MB，仅电脑端本地服务用）
 /models/x86_64/
-# 官方骁龙版解压包：里面的 19 个 .so 与 /models/android-snapdragon/jniLibs/ 完全重复
-# （jniLibs 才是 :app:assemblePhys 真正打包用的那份，已入库）
+# 官方骁龙版解压包：里面的 19 个 .so 与 /models/android-snapdragon/jniLibs/ 高度重复
+# （jniLibs 才是 :app:assemblePhys 真正打包用的那份；该目录自 2026-10-12 起不再入库，见下面第 6.6 节）
 /models/android-snapdragon/llama-b*/
 # 已解压过的原始压缩包（55 MB）
 /models/Android arm64（骁龙：CPU，Adreno GPU，Hexagon NPU）/

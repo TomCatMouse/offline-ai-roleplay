@@ -2,6 +2,14 @@
 
 完全离线的 Android 角色扮演 App：角色卡、多轮对话、长期记忆、手机上本地跑 GGUF 大模型。
 
+## 界面预览
+
+真机实拍（魅族 21 Pro / 骁龙 8 Gen 3）：
+
+| 首页 · 角色列表 | 新建角色 |
+| --- | --- |
+| <img src="docs/images/home.png" width="400" alt="首页：角色网格、搜索、收藏、稀有度与等级"> | <img src="docs/images/new-character.png" width="400" alt="新建角色：名字、说话风格、性格描述、标签、背景故事、开场白，可一键 AI 补全"> |
+
 ## 功能概览
 
 - 角色卡：姓名、性格、说话风格、背景故事、开场白、标签与稀有度，支持 AI 批量补全
@@ -31,10 +39,10 @@
 
 两种取得方式：
 
-1. **下载现成压缩包（最快）**：从 [Releases](https://github.com/TomCatMouse/offline-ai-roleplay/releases/latest)
-   下载 `engine-libs-arm64-v8a-b11558.zip`（59 MB），解压到项目根目录 —— 解压后即
-   `models/android-snapdragon/jniLibs/arm64-v8a/` 下的 27 个 `.so`（sha256 以 `6E9B6F4C` 开头）。
-2. **自己编译（正统做法）**：完整配方、自检命令与踩坑记录见
+- **方式一 · 下载现成压缩包（最快）**：从 [Releases](https://github.com/TomCatMouse/offline-ai-roleplay/releases/latest)
+  下载 `engine-libs-arm64-v8a-b11558.zip`（59 MB），解压到项目根目录 —— 解压后即
+  `models/android-snapdragon/jniLibs/arm64-v8a/` 下的 27 个 `.so`（sha256 以 `6E9B6F4C` 开头）。
+- **方式二 · 自己编译（正统做法）**：完整配方、自检命令与踩坑记录见
 [`docs/android-armv8.2-engine-rebuild.md`](docs/android-armv8.2-engine-rebuild.md)：
 
 1. **自编 16 个引擎库（最关键的一步）**：官方预编译包是 ARMv8.6 口径，在骁龙 855/865/870/888 上一启动就 SIGILL，
@@ -123,20 +131,32 @@ python test_http.py                       # 默认打 127.0.0.1（手机本地�
 set ROLEPLAY_HOST=192.168.1.100 && python test_http.py   # 打 PC 的局域网 IP
 ```
 
-## 打赏支持
+---
 
-如果这个项目帮到了你，可以请作者喝杯奶茶 ☕
+<div align="center">
+
+## 💖 打赏支持
+
+**如果这个项目帮到了你，可以请作者喝杯奶茶 🧋**
+
+**你的一点心意，就是作者继续更新的动力 💗**
+
+</div>
 
 <details>
-<summary><b>点击查看打赏码（微信 / 支付宝）</b></summary>
+<summary><b>👉 点我展开打赏码（微信 / 支付宝）👈</b></summary>
 
 <br>
+
+<div align="center">
 
 | 微信 | 支付宝 |
 | --- | --- |
 | [![微信收款码][qr-wechat]][qr-wechat] | [![支付宝收款码][qr-alipay]][qr-alipay] |
 
-点一下图片可看大图 / 保存。收款码在仓库里**只存这一份**（`app/src/main/res/drawable/reward_qr_*.jpg`）：App 内打赏弹窗与这里引用的是同一张图，换码只需替换这两个文件。
+点一下图片可看大图 / 保存 · 收款码在仓库里**只存这一份**（`app/src/main/res/drawable/reward_qr_*.jpg`），App 内打赏弹窗引用的是同一张图，换码只需替换这两个文件
+
+</div>
 
 </details>
 
