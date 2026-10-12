@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="bg_primary">#FF12121A</color>
+    <color name="bg_secondary">#FF1E1E2E</color>
+    <color name="accent_purple">#FF9C27B0</color>
+    <color name="accent_blue">#FF2196F3</color>
+
+    <!--
+      启动图标底色。取自素材「图标3.jpg」圆形边缘的平均色，
+      与前景层无缝衔接，这样任意形状的图标遮罩（圆/方/水滴）都不会露白边。
+      由 tools/prepare_assets.py 计算得出，换素材时重跑脚本即可更新。
+    -->
+    <color name="ic_launcher_background">#FFB4DDF3</color>
+</resources>

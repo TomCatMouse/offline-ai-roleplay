@@ -1,0 +1,23 @@
+# 二进制文件不要做换行/编码转换，避免 .so / .db / .png 被 git 改坏
+*.so   binary
+*.apk  binary
+*.aar  binary
+*.jar  binary
+*.gguf binary
+*.db   binary
+*.db-wal binary
+*.db-shm binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.zip  binary
+*.gz   binary
+
+# 文本文件统一按 LF 存库（.bat 保持 CRLF，否则 Windows 上双击可能异常）
+* text=auto
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+*.kt  text eol=lf
+*.kts text eol=lf
+*.md  text eol=lf

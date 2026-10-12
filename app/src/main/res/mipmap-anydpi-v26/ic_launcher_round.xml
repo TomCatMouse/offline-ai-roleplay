@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  自适应图标（API 26+）。
+  前景层来自素材「图标3.jpg」，由 tools/prepare_assets.py 抠掉白色背景后
+  缩放到安全区（66/108）生成，5 档密度分别放在 mipmap-*/ic_launcher_foreground.png。
+  背景层用素材圆形边缘的平均色，保证任何遮罩形状下都不会露出白边。
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background" />
+    <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+</adaptive-icon>

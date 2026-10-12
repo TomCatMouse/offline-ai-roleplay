@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.OfflineAIRoleplay" parent="android:Theme.Material.NoActionBar">
+        <item name="android:statusBarColor">#FF12121A</item>
+        <item name="android:navigationBarColor">#FF12121A</item>
+        <!--
+          原来继承 Light 主题 → 窗口底是白色的：启动瞬间、连接重试、界面重绘时
+          会闪一下白屏。压成 App 深色底，白闪直接消失。
+        -->
+        <item name="android:windowBackground">@color/bg_primary</item>
+        <item name="android:colorBackground">@color/bg_primary</item>
+    </style>
+</resources>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    奶茶杯矢量图标（打赏入口专用）。
+    为什么不用 🧋 emoji：MuMu 模拟器的系统字库缺 Unicode 13 字形，会渲染成空框/豆腐块；
+    随包矢量图在真机 / 模拟器上表现一致。颜色直接烘焙成打赏横幅的金色（FFC266）。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- 吸管（斜插进杯口） -->
+    <path
+        android:fillColor="#FFC266"
+        android:pathData="M12.9,2.1 L14.9,2.1 L14.4,7.4 L12.4,7.4 Z" />
+    <!-- 杯盖 -->
+    <path
+        android:fillColor="#FFC266"
+        android:pathData="M6.1,8.1 L17.9,8.1 A1.1,1.1 0 0 1 19,9.2 L19,9.5 A1.1,1.1 0 0 1 17.9,10.6 L6.1,10.6 A1.1,1.1 0 0 1 5,9.5 L5,9.2 A1.1,1.1 0 0 1 6.1,8.1 Z" />
+    <!-- 杯身：描边梯形，上宽下窄圆底 -->
+    <path
+        android:strokeColor="#FFC266"
+        android:strokeWidth="1.6"
+        android:strokeLineJoin="round"
+        android:pathData="M6.5,12.3 L17.5,12.3 L16.6,19.3 Q16.4,21 14.7,21 L9.3,21 Q7.6,21 7.4,19.3 Z" />
+    <!-- 珍珠 ×3 -->
+    <path
+        android:fillColor="#FFC266"
+        android:pathData="M10.1,17.3 m-0.95,0 a0.95,0.95 0 1 1 1.9,0 a0.95,0.95 0 1 1 -1.9,0" />
+    <path
+        android:fillColor="#FFC266"
+        android:pathData="M13.9,17.3 m-0.95,0 a0.95,0.95 0 1 1 1.9,0 a0.95,0.95 0 1 1 -1.9,0" />
+    <path
+        android:fillColor="#FFC266"
+        android:pathData="M12,19.2 m-0.95,0 a0.95,0.95 0 1 1 1.9,0 a0.95,0.95 0 1 1 -1.9,0" />
+</vector>

@@ -1,0 +1,72 @@
+{
+  "host": "0.0.0.0",
+  "infer_port": 8080,
+  "switch_port": 8090,
+  "defaults": {
+    "threads": 6,
+    "ctx_size": 8192,
+    "ngl": 0
+  },
+  "//": "模型目录：models/gguf/（自动扫描）—— 把任意 .gguf 丢进这个文件夹，不用改本文件，重启切换器（或直接调 /models、/switch）就会出现在模型列表里，手机设置页也会自动显示。下面 models 数组只用于「想自定义 name 或启动参数」的模型，配置项优先于自动扫到的项。自动扫到的模型用 default_flags 启动。models 数组的第一项是默认模型（首次启动 / 上次的模型文件不存在时用它）；启动时会优先沿用 scripts/.last_model 里记录的模型。",
+  "default_flags": [
+    "--reasoning", "off",
+    "--repeat-last-n", "512",
+    "--repeat-penalty", "1.1",
+    "--presence-penalty", "0.2",
+    "--frequency-penalty", "0.1",
+    "--dry-multiplier", "0.5",
+    "--dry-base", "1.75",
+    "--dry-allowed-length", "3",
+    "--dry-penalty-last-n", "512"
+  ],
+  "models": [
+    {
+      "id": "qwen3.5-4b-q4-k-m",
+      "name": "Qwen3.5-4B-Q4_K_M.gguf",
+      "gguf": "models\\gguf\\Qwen3.5-4B-Q4_K_M.gguf",
+      "flags": [
+        "--reasoning", "off",
+        "--repeat-last-n", "512",
+        "--repeat-penalty", "1.1",
+        "--presence-penalty", "0.2",
+        "--frequency-penalty", "0.1",
+        "--dry-multiplier", "0.5",
+        "--dry-base", "1.75",
+        "--dry-allowed-length", "3",
+        "--dry-penalty-last-n", "512"
+      ]
+    },
+    {
+      "id": "qwen3.5-4b-q6-k",
+      "name": "Qwen3.5-4B-Q6_K.gguf",
+      "gguf": "models\\gguf\\Qwen3.5-4B-Q6_K.gguf",
+      "flags": [
+        "--reasoning", "off",
+        "--repeat-last-n", "512",
+        "--repeat-penalty", "1.1",
+        "--presence-penalty", "0.2",
+        "--frequency-penalty", "0.1",
+        "--dry-multiplier", "0.5",
+        "--dry-base", "1.75",
+        "--dry-allowed-length", "3",
+        "--dry-penalty-last-n", "512"
+      ]
+    },
+    {
+      "id": "qwen3.5-4b-q4-0",
+      "name": "Qwen3.5-4B-Q4_0.gguf",
+      "gguf": "models\\gguf\\Qwen3.5-4B-Q4_0.gguf",
+      "flags": [
+        "--reasoning", "off",
+        "--repeat-last-n", "512",
+        "--repeat-penalty", "1.1",
+        "--presence-penalty", "0.2",
+        "--frequency-penalty", "0.1",
+        "--dry-multiplier", "0.5",
+        "--dry-base", "1.75",
+        "--dry-allowed-length", "3",
+        "--dry-penalty-last-n", "512"
+      ]
+    }
+  ]
+}

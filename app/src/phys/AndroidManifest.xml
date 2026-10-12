@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  真机包（phys）专属清单 —— 只有 :app:assemblePhys 会合并这个文件。
+
+  默认包完全不参与，所以默认包里既没有「所有文件访问权限」，
+  也没有任何跟手机本地模型目录有关的东西。
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+      读写 /storage/emulated/0/AI角色扮演/模型/ 里的本地 gguf（Android 11+ 只能靠"所有文件访问"）。
+      首次启动后 App 会在设置页给出「去授权」按钮，点一下到系统页面打开开关即可。
+    -->
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+
+    <!-- Android 10 及以下的老路（read/write 外部存储） -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
+
+    <!--
+      引擎里的 llama-server 是 nativeLibraryDir 下的可执行文件，
+      必须让安装器把 .so 解压出来（不能直接从 APK 里 mmap），否则没法执行。
+    -->
+    <application android:extractNativeLibs="true">
+
+        <!--
+          Adreno GPU 后端（libggml-opencl.so）在链接期就需要系统的 libOpenCL.so。
+          Android 12+ 规定：非 NDK 库必须这样显式声明，才会出现在 App 的 linker namespace 里。
+          这些都在设备的 /vendor/etc/public.libraries.txt 清单中，声明一下就能用；
+          required=false 保证没有对应硬件的机器也能正常安装（引擎起来后只在日志里报错）。
+        -->
+        <uses-native-library
+            android:name="libOpenCL.so"
+            android:required="false" />
+
+        <!--
+          需求 5（OpenCL 根因）：打包进来的 libOpenCL.so 是**高通版 ICD loader**（.so 内可读字符串：
+          vendor/qcom/proprietary/graphics/adreno200/cb/src/loader/icd.c、khrIcdVendorsEnumerateOnce、
+          clGetICDLoaderInfoOCLICD，默认厂商库名 libOpenCL_adreno.so、OCL_ICD_FILENAMES）。
+          它只负责按名字 dlopen 厂商驱动 libOpenCL_adreno.so，而 app 的 linker namespace 里
+          默认没有这个非 NDK 库 → 一个平台都拿不到，于是
+          `ggml_opencl: platform IDs not available.`（ggml-opencl.cpp:6310-6312）。
+          这里补一条声明，让 linker 在设备 /vendor/etc/public.libraries.txt 允许时把厂商驱动
+          放进 app 的 namespace；required=false 保证老机型/没有该库的机器照常安装。
+          运行时还有一道兜底：PhysLocalEngine 探测到该文件存在时会同时下发
+          OCL_ICD_FILENAMES=<绝对路径>。
+        -->
+        <uses-native-library
+            android:name="libOpenCL_adreno.so"
+            android:required="false" />
+
+        <!-- Hexagon NPU 后端运行时用到的 DSP RPC 库（同样在公开清单里） -->
+        <uses-native-library
+            android:name="libcdsprpc.so"
+            android:required="false" />
+        <uses-native-library
+            android:name="libadsprpc.so"
+            android:required="false" />
+        <uses-native-library
+            android:name="libsdsprpc.so"
+            android:required="false" />
+    </application>
+</manifest>

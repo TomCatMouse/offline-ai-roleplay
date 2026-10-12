@@ -1,0 +1,94 @@
+# ============================================================================
+# .gitignore —— 刻意保留(白名单思路)：源码、脚本、文档、证据、正式版说明都入库
+# 只排除三类：可再生成的构建产物 / 第三方上游源码树 / 超大二进制(模型与安装包)
+# 每一项都写了原因，方便日后复核「是不是漏推了」
+# ============================================================================
+
+# ---------- 1) 构建产物与缓存（随时可重新生成）----------
+/app/build/
+/build/
+/.gradle/
+/.kotlin/
+/app/.cxx/
+/captures/
+/app/release/
+/app/debug/
+*.hprof
+*.class
+
+# ---------- 2) 机器相关配置（各人 SDK 路径不同）----------
+local.properties
+
+# ---------- 3) 日志与临时文件 ----------
+*.log
+*.err
+__pycache__/
+*.pyc
+*.tmp
+*.bak
+*~
+# 说明：llama.cpp/ 里的 *.tmpl 是上游 WebGPU 着色器模板，不是临时文件，
+#      但整个 llama.cpp/ 已被下面第 5 条排除，所以这里无需例外。
+# 根目录 release/ 是早年手动拷 APK 的位置（旧包已删），防止再被手动丢回来
+/release/
+
+# ---------- 4) 超大 GGUF 模型（合计 10.9 GB）----------
+# GitHub 单文件硬上限 100 MB，这些模型单文件 2.4~3.3 GB，推不上去；
+# 且本机无外网，删了无法重新下载 —— 模型在手机上另有一份
+# (/storage/emulated/0/AI角色扮演/模型/)，需要时可用 adb pull 回收。
+/models/gguf/
+# PC 端 Windows x86_64 版 llama.cpp（94 MB，仅电脑端本地服务用）
+/models/x86_64/
+# 官方骁龙版解压包：里面的 19 个 .so 与 /models/android-snapdragon/jniLibs/ 完全重复
+# （jniLibs 才是 :app:assemblePhys 真正打包用的那份，已入库）
+/models/android-snapdragon/llama-b*/
+# 已解压过的原始压缩包（55 MB）
+/models/Android arm64（骁龙：CPU，Adreno GPU，Hexagon NPU）/
+
+# ---------- 5) 第三方上游源码树（llama.cpp 完整 clone，401 MB / 5562 文件）----------
+# 内含它自己的 .git、benches、build-android 交叉编译中间产物；
+# 属于上游项目而非本项目源码，需要时从 llama.cpp 官方仓库 clone（版本 b11523）。
+/llama.cpp/
+
+# ---------- 6) 安装包：走 GitHub Releases 发布，不进 git 历史 ----------
+# 发布包体积 11.7~73.4 MB，且每轮都换新；放进 Release 资源可以单独下载/替换，
+# 不必让仓库体积随版本滚雪球。（正式版资源走 GitHub Release，不进 git）
+/dist/**/*.apk
+# 整个 dist/ 都是本地产物（APK + 测试截图），一律不进 git；
+# 之前只忽略 *.apk，测试截图仍会被 git add -A 顺手带走（已踩过两次）。
+/dist/
+
+# ---------- 6.5) 大二进制 / 压缩包：任何位置都不入库 ----------
+# GitHub 单文件硬上限 100 MB；而 git 历史无法轻易瘦身，一旦误提交（哪怕随后删除）
+# 仓库会永久膨胀，push 也会卡死。
+#
+# 已经踩过两次坑（都在 dist\<CN_DIR>\ 下、被 `git add -A` 顺手带走）：
+#   1) Qwen3.5-4B-...-Q4_0.gguf   2.37 GB
+#   2) AI角色扮演.zip              2.50 GB
+# 所以这里按「扩展名」一刀切，比按目录更保险。
+*.gguf
+*.zip
+*.7z
+*.rar
+*.tar
+*.gz
+*.xz
+*.bz2
+# 注意：这里刻意按「整个 jniLibs 目录」排除，而不是用 *.so 通配 —— 万一将来别处需要有 .so 入库，
+#      不会被这条规则误伤。
+
+# ---------- 6.6) 骁龙引擎库：不入库（2026-10-12 起）----------
+# 27 个文件 / 245.7 MB，占仓库体积 98.5%；且其中的 libOpenCL.so 是从设备提取的厂商实现、
+# 受其自身许可约束，不适合随仓库再分发。构建真机包前请按 README「引擎库准备」自行编译：
+# 18 个自编（libomp.so 取 NDK）+ 8 个取自上游 llama.cpp 的 Android snapdragon 包 + 1 个从设备提取。
+# 自检：powershell -File scripts\setup-engine-libs.ps1
+/models/android-snapdragon/jniLibs/
+
+# ---------- 7) 真机数据快照（个人数据，不进仓库）----------
+/backup/
+
+# 评测工具（tools\*.ps1）的输出目录：属本机跑出来的结果，不进仓库
+/docs/evidence/
+
+# 模型切换器的运行期状态文件（自动生成，不入库）
+/scripts/.last_model

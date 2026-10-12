@@ -1,0 +1,46 @@
+#!/bin/bash
+# pre-commit hook: refuse to commit oversized files.
+#
+# Why: GitHub rejects files > 100 MB, and a big blob is effectively permanent in
+# git history (removing it later needs a rewrite + force push). Twice now a
+# multi-GB file sitting in dist\<CN_DIR>\ was swept in by `git add -A`:
+#   - Qwen3.5-4B-...Q4_0.gguf   2.37 GB
+#   - AI角色扮演.zip             2.50 GB
+#
+# Install (run once per clone):
+#   cp scripts/hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+#
+# Override in an emergency (please don't):
+#   git commit --no-verify
+
+# 80 MB：GitHub 硬上限 100 MB，留出余量。
+# 为什么不是 50 MB：引擎里最大的 libllama-common.so 有 63.2 MB，是**必须入库**的合法文件
+#   （/models/android-snapdragon/jniLibs/ 就是 :app:assemblePhys 打包用的那份），
+#   50 MB 阈值会把将来重建引擎的正常提交也误拦。
+MAXMB=80
+LIMIT=$((MAXMB * 1024 * 1024))
+
+TMP=$(mktemp)
+trap 'rm -f "$TMP"' EXIT
+git diff --cached --name-only --diff-filter=ACM -z > "$TMP"
+
+bad=0
+while IFS= read -r -d '' f; do
+    [ -f "$f" ] || continue
+    sz=$(wc -c < "$f" 2>/dev/null)
+    [ -z "$sz" ] && continue
+    if [ "$sz" -gt "$LIMIT" ]; then
+        printf '  BLOCKED: %s (%s MB)\n' "$f" "$((sz / 1024 / 1024))" >&2
+        bad=1
+    fi
+done < "$TMP"
+
+if [ "$bad" -ne 0 ]; then
+    echo "" >&2
+    echo "ERROR: staged file(s) exceed ${MAXMB} MB - commit refused." >&2
+    echo "Fix: add them to .gitignore, then re-stage." >&2
+    echo "     (dist\\<CN_DIR>\\ 下的模型/压缩包/APK 本来就不该入库)" >&2
+    exit 1
+fi
+
+exit 0

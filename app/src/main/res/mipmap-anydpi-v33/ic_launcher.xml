@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  API 33+ 版本：在 v26 基础上追加 monochrome 层，支持「主题图标」。
+  单独放 anydpi-v33 而不直接改 v26，是因为 <monochrome> 元素
+  在 API 33 才进入 adaptive-icon 规范，放在 v26 目录会让低版本解析器困惑。
+  monochrome 用前景层的 alpha 通道生成剪影，保证形状与彩色版完全一致。
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background" />
+    <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+    <monochrome android:drawable="@mipmap/ic_launcher_monochrome" />
+</adaptive-icon>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AI角色扮演</string>
+    <string name="characters_title">我的角色</string>
+    <string name="chat_history">对话历史</string>
+    <string name="search_placeholder">搜索角色...</string>
+    <string name="send_button">发送</string>
+    <string name="typing_indicator">正在输入...</string>
+</resources>
