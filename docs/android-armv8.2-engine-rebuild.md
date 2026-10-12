@@ -5,7 +5,7 @@
 > 新指令直接 **SIGILL**（日志表现为 `Fatal signal 4 (SIGILL), code 1 (ILL_ILLOPC)`，
 > App 侧显示「引擎进程结束 code=132」）。
 >
-> **当前入库状态（b11558 / 2026-10-12）**：`models/android-snapdragon/jniLibs/arm64-v8a` **共 27 个文件**
+> **当前入库状态（b11558 / 2026-10-12）**：`engine/android-snapdragon/jniLibs/arm64-v8a` **共 27 个文件**
 > = 按本配方**全量自编的 16 个引擎库**（§2 / §4）+ `libllama-server.so`（改名的 `bin/llama-server`）
 > + `libomp.so`（自编 CPU 后端的 OpenMP 运行时，取自 NDK clang 19）
 > + 上游 Hexagon skel 与高通设备库（`libggml-hexagon.so`、`libggml-htp-v73/75/79/81.so`、
@@ -73,7 +73,7 @@ NDK 28 不带 `CL/cl.h`，需要自备 Khronos 头：
 git clone --depth 1 https://github.com/KhronosGroup/OpenCL-Headers <tmp>\OpenCL-Headers
 ```
 
-链接期用包内那个**厂商 OpenCL 实现本体**（`models\android-snapdragon\jniLibs\arm64-v8a\libOpenCL.so`，115112 B，直接取自设备 `/vendor/lib64/` —— 见 §5.2，**不是**高通那层 ICD loader），
+链接期用包内那个**厂商 OpenCL 实现本体**（`engine\android-snapdragon\jniLibs\arm64-v8a\libOpenCL.so`，115112 B，直接取自设备 `/vendor/lib64/` —— 见 §5.2，**不是**高通那层 ICD loader），
 `find_package(OpenCL)` 在交叉编译时找不到它，必须显式传 `OpenCL_INCLUDE_DIR` / `OpenCL_LIBRARY`。
 
 ## 2. 配置与构建
@@ -81,7 +81,7 @@ git clone --depth 1 https://github.com/KhronosGroup/OpenCL-Headers <tmp>\OpenCL-
 ```powershell
 $ndk = "<AndroidSDK>\ndk\28.2.13676358"
 $wt  = "<tmp>\llama-b11550"
-$jni = "<repo>\models\android-snapdragon\jniLibs\arm64-v8a"
+$jni = "<repo>\engine\android-snapdragon\jniLibs\arm64-v8a"
 
 cmake -S $wt -B "$wt\build-android-v82" -G Ninja `
   -DCMAKE_TOOLCHAIN_FILE="$ndk/build/cmake/android.toolchain.cmake" `
@@ -220,7 +220,7 @@ F linker: CANNOT LINK EXECUTABLE ".../libllama-server.so":
 ```powershell
 $ndk   = "<AndroidSDK>\ndk\28.2.13676358"
 $ninja = "<AndroidSDK>\cmake\3.22.1\bin\ninja.exe"
-$jni   = "<repo>\models\android-snapdragon\jniLibs\arm64-v8a"
+$jni   = "<repo>\engine\android-snapdragon\jniLibs\arm64-v8a"
 
 # 1) 从真机取厂商 OpenCL 实现，直接当包内 libOpenCL.so（115112 B）
 adb pull /vendor/lib64/libOpenCL.so "$jni\libOpenCL.so"

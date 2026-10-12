@@ -52,7 +52,7 @@ MODELS_DIR = os.path.abspath(os.path.join(BASE, "..", "models", "gguf"))
 # 现在把最后一次成功的模型落盘，启动时优先沿用它。
 STATE_PATH = os.path.join(BASE, ".last_model")
 
-BIN_DIR = os.path.join(BASE, "..", "models", "x86_64", "llama-b11558-win-x64", "llama-server.exe")
+BIN_DIR = os.path.join(BASE, "..", "engine", "x86_64", "llama-b11558-win-x64", "llama-server.exe")
 BIN_DIR = os.path.abspath(BIN_DIR)
 
 STATE = {

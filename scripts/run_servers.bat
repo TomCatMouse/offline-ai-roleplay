@@ -9,7 +9,7 @@ rem   �÷�: run_servers.bat [ģ���ļ���] [�˿�]
 rem ============================================================
 
 set "ROOT=%~dp0.."
-set "SERVER=%ROOT%\models\x86_64\llama-b11558-win-x64\llama-server.exe"
+set "SERVER=%ROOT%\engine\x86_64\llama-b11558-win-x64\llama-server.exe"
 set "MODELDIR=%ROOT%\models\gguf"
 
 rem ---- Ĭ��ģ��: Qwen3.5-4B Q6_K (�ķ����; ����Լ 4.1 tok/s) ----

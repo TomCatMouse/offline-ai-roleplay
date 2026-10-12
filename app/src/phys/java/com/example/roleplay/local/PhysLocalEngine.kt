@@ -250,6 +250,29 @@ object PhysLocalEngine : LocalEngine {
 
     private fun modelDir() = File(rootDir(), MODELS_NAME)
 
+    /**
+     * 幂等：确保 `/storage/emulated/0/AI角色扮演/模型` 存在。
+     *
+     * 为什么必须单独抽出来：`mkdirs()` 失败**不抛异常**、只返回 false，
+     * 原来那句 `runCatching { if (!dir.exists()) dir.mkdirs() }` 会把失败**完全吞掉** ——
+     * 全新安装时还没授「所有文件访问权限」，目录就静默建不出来；
+     * 而授权后返回 App 只走 rescan()（原先不建目录），于是必须重启 App 才看得到目录。
+     * 现在 attach() 与 rescan() 都会调用本方法：授权后立即生效，失败也会留下日志。
+     */
+    private fun ensureModelDirs(): Boolean {
+        val root = rootDir()
+        val dir = modelDir()
+        val ok = (root.isDirectory || root.mkdirs()) && (dir.isDirectory || dir.mkdirs())
+        if (!ok) {
+            Log.w(
+                TAG,
+                "建目录失败（多半是缺「所有文件访问权限」）：${dir.absolutePath}" +
+                    " ｜ 根目录存在=${root.exists()} 模型目录存在=${dir.exists()}"
+            )
+        }
+        return ok
+    }
+
     private fun engineFile(ctx: Context) = File(ctx.applicationInfo.nativeLibraryDir, ENGINE_EXE)
 
     private fun hasAllFilesAccess(ctx: Context): Boolean =
@@ -304,11 +327,8 @@ object PhysLocalEngine : LocalEngine {
                 modelDir = dir.absolutePath
             )
         }
-        // 需求 #2：安装/首次启动就自动把目录建出来（没权限时只提示，不崩）
-        runCatching {
-            if (!root.exists()) root.mkdirs()
-            if (!dir.exists()) dir.mkdirs()
-        }
+        // 需求 #2：安装/首次启动就自动把目录建出来（没权限时只打日志，不崩）
+        ensureModelDirs()
         killStaleEngine(ctx)
         rescan()
     }
@@ -374,6 +394,8 @@ object PhysLocalEngine : LocalEngine {
         val ctx = appContext ?: return
         _state.update { it.copy(scanning = true) }
         scope.launch {
+            // 授权后返回 App 会走到这里（ON_RESUME → rescan），顺手把目录补齐 —— 不用重启 App
+            ensureModelDirs()
             val root = rootDir()
             val dir = modelDir()
             // 两个位置都扫：/storage/emulated/0/AI角色扮演/模型/ 和 /storage/emulated/0/AI角色扮演/

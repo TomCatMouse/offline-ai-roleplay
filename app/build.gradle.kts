@@ -13,11 +13,11 @@ android {
         applicationId = "com.example.roleplay"
         minSdk = 26
         targetSdk = 34
-        // 版本号：按用户要求这一轮修复/优化**锁在 1.0.2**，打包时用 -Bump none 不再递增。
-        // versionCode 按用户要求暂时停留在 3（不再往上走）。注意：若目标机已装了比 3 更高的
-        // versionCode，`install -r` 会因「降级」被拒，需先卸载或用 `adb install -r -d`。
-        versionCode = 3
-        versionName = "1.0.2"
+        // 版本号自 1.0.3（versionCode 4）起恢复正常递增：改动 app/src、build.gradle.kts 或
+        // engine 下的引擎库后，scripts\pack-release.ps1 会自动把补丁号与 versionCode 各 +1。
+        // 注意：若目标机已装了更高的 versionCode，`install -r` 会因「降级」被拒，需先卸载或用 `adb install -r -d`。
+        versionCode = 4
+        versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -81,7 +81,7 @@ android {
         //   - 本文件里所有 phys 相关配置都不参与，行为与体积零变化
         //
         // 【真机包】:app:assemblePhys
-        //   - 内置 models/android-snapdragon 里的 llama.cpp 骁龙引擎
+        //   - 内置 engine/android-snapdragon 里的 llama.cpp 骁龙引擎
         //     （libllama-server.so 可执行文件 + CPU/Adreno OpenCL/Hexagon HTP 后端 .so）
         //   - 本地模型放手机 /storage/emulated/0/AI角色扮演/模型/，App 自动扫描并本地推理，不依赖 PC
         //   - applicationId = com.example.roleplay.phys → 可与默认包共存，数据各自独立
@@ -135,7 +135,7 @@ android {
         // Android 只允许执行 nativeLibraryDir 里的东西，所以必须走这条路。
         // 默认包不引用这个目录 → 默认 APK 里一个引擎字节都没有。
         getByName("phys") {
-            jniLibs.srcDirs(rootProject.file("models/android-snapdragon/jniLibs"))
+            jniLibs.srcDirs(rootProject.file("engine/android-snapdragon/jniLibs"))
         }
 
         // 真机正式版（buildType 名不同 → 默认会去找 src/physRelease/，所以手动指回 src/phys/）：
@@ -143,7 +143,7 @@ android {
         getByName("physRelease") {
             manifest.srcFile("src/phys/AndroidManifest.xml")
             java.srcDirs("src/phys/java")
-            jniLibs.srcDirs(rootProject.file("models/android-snapdragon/jniLibs"))
+            jniLibs.srcDirs(rootProject.file("engine/android-snapdragon/jniLibs"))
         }
     }
     compileOptions {
@@ -165,6 +165,14 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+        // 真机包要把引擎 .so 按「传统方式」打包：APK 内压缩存储，安装时解压到
+        // nativeLibraryDir —— 只有解压成真实文件，libllama-server.so 才能被 exec。
+        // 这与 src/phys/AndroidManifest.xml 里原先手写的 extractNativeLibs="true" 是同一件事，
+        // 现在统一在这里声明（清单里那行已去掉），两条 AGP 构建警告随之消失。
+        // 注意：AGP 8 默认是 false（.so 不压缩、不解压直接 mmap），那种打包方式引擎起不来。
+        jniLibs {
+            useLegacyPackaging = true
         }
     }
 

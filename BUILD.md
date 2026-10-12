@@ -4,14 +4,15 @@
 
 ## 1. 准备引擎库（只有真机包需要）
 
-真机包内置骁龙推理引擎，引擎库（`models/android-snapdragon/jniLibs/arm64-v8a`，27 个文件 / 246 MB）
+真机包内置骁龙推理引擎，引擎库（`engine/android-snapdragon/jniLibs/arm64-v8a`，27 个文件 / 246 MB）
 **不进仓库** —— 既有本项目自编的产物，也有厂商闭源库，体积与许可都不适合入库。缺了它构建会在打包阶段提示缺少 jniLibs。
 
 ### 方式一：下载现成压缩包（最快）
 
 1. 到 [Releases](https://github.com/TomCatMouse/offline-ai-roleplay/releases/latest) 下载
    `engine-libs-arm64-v8a-b11558.zip`（59 MB，sha256 以 `6E9B6F4C` 开头、以 `DDB4` 结尾）
-2. 解压到项目根目录，解压后应为 `models/android-snapdragon/jniLibs/arm64-v8a/` 下的 27 个 `.so`
+2. 在项目根目录新建 `engine\android-snapdragon\`，把压缩包解压进去（包内就是 `jniLibs/arm64-v8a/`）——
+   解压后应为 `engine/android-snapdragon/jniLibs/arm64-v8a/` 下的 27 个 `.so`
 3. 自检：`powershell -File scripts\setup-engine-libs.ps1`，看到「期望 27 ｜ 缺失 0 ｜ 多余 0」就算就绪
 
 ### 方式二：自己编译（正统做法）

@@ -25,8 +25,14 @@
     <!--
       引擎里的 llama-server 是 nativeLibraryDir 下的可执行文件，
       必须让安装器把 .so 解压出来（不能直接从 APK 里 mmap），否则没法执行。
+
+      这件事现在由 app/build.gradle.kts 的 packaging.jniLibs.useLegacyPackaging = true 统一声明，
+      AGP 8 会据此在合并清单里写入 android:extractNativeLibs="true"。
+      所以这里不再手写 —— 手写的话 AGP 会报
+      "android:extractNativeLibs should not be specified in this source AndroidManifest.xml file"，
+      而且一旦 build.gradle 那边调整，两边容易打架。
     -->
-    <application android:extractNativeLibs="true">
+    <application>
 
         <!--
           Adreno GPU 后端（libggml-opencl.so）在链接期就需要系统的 libOpenCL.so。

@@ -8,7 +8,7 @@
 #   .\scripts\pack-release.ps1 -Bump none     # keep version, just repack
 #
 # Auto-bump rule:
-#   Hash app/src + app/build.gradle.kts + models/android-snapdragon/jniLibs,
+#   Hash app/src + app/build.gradle.kts + engine/android-snapdragon/jniLibs,
 #   compare with scripts/version-state.json.
 #   If the hash differs (= feature update or bug fix), bump patch and versionCode +1.
 
@@ -34,9 +34,9 @@ function Get-SourceHash {
     $files = @()
     $files += Get-ChildItem -Path (Join-Path $root "app\src") -Recurse -File -ErrorAction SilentlyContinue
     $files += Get-Item $gradlePath
-    # 引擎 .so 也会被打进 APK（jniLibs 指向 models\android-snapdragon\jniLibs），
+    # 引擎 .so 也会被打进 APK（jniLibs 指向 engine\android-snapdragon\jniLibs），
     # 所以重建引擎同样应该触发版本递增 —— 只算 app/src 会漏掉这类改动。
-    $files += Get-ChildItem -Path (Join-Path $root "models\android-snapdragon\jniLibs") -Recurse -File -ErrorAction SilentlyContinue
+    $files += Get-ChildItem -Path (Join-Path $root "engine\android-snapdragon\jniLibs") -Recurse -File -ErrorAction SilentlyContinue
     $sb = New-Object System.Text.StringBuilder
     foreach ($f in ($files | Sort-Object { $_.FullName.Substring($root.Length) })) {
         [void]$sb.Append($f.FullName.Substring($root.Length))

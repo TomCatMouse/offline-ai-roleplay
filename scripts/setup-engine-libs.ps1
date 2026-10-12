@@ -1,6 +1,6 @@
 ﻿# setup-engine-libs.ps1 —— 骁龙引擎库自检 / 获取提示
 #
-# 背景：models/android-snapdragon/jniLibs/arm64-v8a 下的 27 个引擎库不入库（体积 246 MB，
+# 背景：engine/android-snapdragon/jniLibs/arm64-v8a 下的 27 个引擎库不入库（体积 246 MB，
 #       且含受厂商许可约束的高通闭源库）。构建真机包前需要先把它们准备好。
 # 用法：powershell -File scripts\setup-engine-libs.ps1
 #       （若提示「未对文件进行数字签名/禁止运行脚本」，改用：
@@ -9,7 +9,7 @@
 $ErrorActionPreference = "Stop"
 
 $root = Split-Path -Parent $PSScriptRoot
-$dir  = Join-Path $root "models\android-snapdragon\jniLibs\arm64-v8a"
+$dir  = Join-Path $root "engine\android-snapdragon\jniLibs\arm64-v8a"
 
 # 期望清单：27 个文件，缺任何一个都可能导致真机引擎装载失败
 $expected = @(
@@ -63,7 +63,7 @@ if ($missing.Count -gt 0) {
     Write-Host ""
     Write-Host "获取方式（详见根目录 BUILD.md 第 1 步）：" -ForegroundColor Cyan
     Write-Host "  1) 最快 —— 到 Releases 下载 engine-libs-arm64-v8a-b11558.zip（59 MB），"
-    Write-Host "             解压到项目根目录，即得到 jniLibs/arm64-v8a 下这 27 个文件"
+    Write-Host "             在项目根目录新建 engine\android-snapdragon\ 后解压进去（包内即 jniLibs\arm64-v8a\）"
     Write-Host "  2) 自行编译（完整配方见 docs/android-armv8.2-engine-rebuild.md）："
     Write-Host "     - 18 个：自编 16 个引擎库（第 1 节源码 → 第 2 节构建 → 第 3 节自检 → 第 4 节入库；"
     Write-Host "              注意第 5 节第 10 小节：libggml.so 必须带 Hexagon 注册宏）"

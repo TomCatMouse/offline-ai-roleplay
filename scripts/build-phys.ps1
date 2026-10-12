@@ -4,7 +4,7 @@
   重要约定（用户 2026-07 明确要求）：
     - 「打包」默认打的是 MuMu 版（build-default.ps1）；真机/Flyme 包只在明确要求时打
     - 产物：dist\Flyme版\AI角色扮演-Flyme版-v<版本>.apk
-    - 内置 models/android-snapdragon 里的骁龙 arm64 llama.cpp 引擎
+    - 内置 engine/android-snapdragon 里的骁龙 arm64 llama.cpp 引擎
       （CPU + Adreno OpenCL GPU + Hexagon NPU 后端），模型放手机本地
 
   本脚本做的事：

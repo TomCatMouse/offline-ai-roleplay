@@ -15,7 +15,7 @@
 
 # 80 MB：GitHub 硬上限 100 MB，留出余量。
 # 为什么不是 50 MB：引擎里最大的 libllama-common.so 有 63.2 MB，是**必须入库**的合法文件
-#   （/models/android-snapdragon/jniLibs/ 就是 :app:assemblePhys 打包用的那份），
+#   （/engine/android-snapdragon/jniLibs/ 就是 :app:assemblePhys 打包用的那份），
 #   50 MB 阈值会把将来重建引擎的正常提交也误拦。
 MAXMB=80
 LIMIT=$((MAXMB * 1024 * 1024))

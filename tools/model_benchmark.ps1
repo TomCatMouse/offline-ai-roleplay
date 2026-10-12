@@ -25,7 +25,7 @@ $ErrorActionPreference = "Continue"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 $root = Split-Path -Parent $PSScriptRoot          # 项目根目录
-$exe = Join-Path $root "models\x86_64\llama-b11558-win-x64\llama-server.exe"
+$exe = Join-Path $root "engine\x86_64\llama-b11558-win-x64\llama-server.exe"
 $ggufDir = Join-Path $root "models\gguf"
 $evidence = Join-Path $root "docs\evidence"
 $logDir = Join-Path $root "docs\evidence\bench_logs"
