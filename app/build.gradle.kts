@@ -13,11 +13,13 @@ android {
         applicationId = "com.example.roleplay"
         minSdk = 26
         targetSdk = 34
-        // 版本号自 1.0.3（versionCode 4）起恢复正常递增：改动 app/src、build.gradle.kts 或
-        // engine 下的引擎库后，scripts\pack-release.ps1 会自动把补丁号与 versionCode 各 +1。
+        // 版本号规则（用户要求）：版本号只在「发布成功推到 GitHub」这个事件上递增。
+        //   · 发布完成后跑一次 scripts\bump-version.ps1，把补丁号与 versionCode 各加一，然后提交推送；
+        //   · 发布之前的任何本地改动、任意次打包，都保持当前版本，不吃版本号；
+        //   · scripts\pack-release.ps1 默认已改为只打包、不动版本号。
         // 注意：若目标机已装了更高的 versionCode，`install -r` 会因「降级」被拒，需先卸载或用 `adb install -r -d`。
-        versionCode = 4
-        versionName = "1.0.3"
+        versionCode = 5
+        versionName = "1.0.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -183,6 +185,35 @@ android {
     lint {
         checkReleaseBuilds = false
         abortOnError = false
+    }
+}
+
+// ============================================================================
+// 真机包守卫：engine/android-snapdragon/jniLibs/arm64-v8a 下应有 27 个 .so。
+//
+// 为什么需要它：Gradle 对不存在的 jniLibs.srcDirs 不会报错（只当成"没有库"），
+// 于是照样会打印 BUILD SUCCESSFUL，打出一个里面一个引擎字节都没有的"真机包"，
+// 装到手机上推理完全不可用。开源后别人第一次构建最容易踩这个坑，所以显式拦下。
+// ============================================================================
+tasks.matching {
+    val n = it.name
+    n == "prePhysBuild" || n == "prePhysReleaseBuild" ||
+        n == "assemblePhys" || n == "assemblePhysRelease" ||
+        n == "packagePhys" || n == "packagePhysRelease"
+}.configureEach {
+    doFirst {
+        val engineDir = rootProject.file("engine/android-snapdragon/jniLibs/arm64-v8a")
+        val soCount = engineDir.listFiles { f -> f.isFile && f.name.endsWith(".so") }?.size ?: 0
+        if (soCount < 27) {
+            throw GradleException(
+                "[MISSING_ENGINE_LIBS] 缺少骁龙引擎库：engine/android-snapdragon/jniLibs/arm64-v8a " +
+                    "下只找到 $soCount / 27 个 .so。\n" +
+                    "  ① 最快：从 Release 下载 engine-libs-arm64-v8a-b11558.zip，" +
+                    "解压到 engine\\android-snapdragon\\\n" +
+                    "  ② 或按 docs/android-armv8.2-engine-rebuild.md 自行编译\n" +
+                    "  ③ 自检：powershell -File scripts\\setup-engine-libs.ps1"
+            )
+        }
     }
 }
 

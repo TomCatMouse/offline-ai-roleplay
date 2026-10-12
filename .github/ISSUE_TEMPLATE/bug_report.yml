@@ -1,0 +1,82 @@
+name: Bug 报告
+description: 报告一个可复现的缺陷
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈！请尽量把信息填全，尤其是**机型、推理档位和日志** —— 本地推理的绝大多数问题看日志就能定位。
+
+  - type: input
+    id: version
+    attributes:
+      label: App 版本
+      description: 设置页底部，或 APK 文件名（例如 1.0.3-phys）
+      placeholder: 1.0.3-phys
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: 机型与 SoC
+      placeholder: 魅族 21 Pro / 骁龙 8 Gen 3（SM8650）
+    validations:
+      required: true
+
+  - type: dropdown
+    id: backend
+    attributes:
+      label: 出问题的推理档位
+      options:
+        - CPU
+        - GPU（Adreno / OpenCL）
+        - NPU（Hexagon / HTP）
+        - 与档位无关 / 不确定
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      placeholder: |
+        1. 打开设置页，把推理档位切到 NPU
+        2. 回到角色页发送一条消息
+        3. ……
+    validations:
+      required: true
+
+  - type: textarea
+    id: result
+    attributes:
+      label: 期望结果 / 实际结果
+    validations:
+      required: true
+
+  - type: input
+    id: model
+    attributes:
+      label: 使用的模型与量化
+      placeholder: Qwen3.5-4B-Q4_K_M.gguf
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 相关日志
+      description: 设置页里的引擎日志，或 `adb logcat -s PhysEngine:*` 的输出。请先删掉个人信息，再粘贴到代码块里
+      render: text
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: 提交前确认
+      options:
+        - label: 我已经在最新版本上复现过这个问题
+          required: true
+        - label: 我换过别的模型，问题依旧（排除模型文件本身的问题）
+          required: false
