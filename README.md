@@ -118,13 +118,20 @@ set ROLEPLAY_HOST=192.168.1.100 && python test_http.py   # 打 PC 的局域网 I
 
 ## 打赏支持
 
-如果这个项目帮到了你，可以请作者喝杯奶茶 ☕ 微信、支付宝扫码都行：
+如果这个项目帮到了你，可以请作者喝杯奶茶 ☕
+
+<details>
+<summary><b>点击查看打赏码（微信 / 支付宝）</b></summary>
+
+<br>
 
 | 微信 | 支付宝 |
 | --- | --- |
 | [![微信收款码][qr-wechat]][qr-wechat] | [![支付宝收款码][qr-alipay]][qr-alipay] |
 
-> 收款码在仓库里**只存这一份**（`app/src/main/res/drawable/reward_qr_*.jpg`）：App 内打赏弹窗与这里引用的是同一张图，换码只需替换这两个文件。点一下图片可看大图 / 保存。
+点一下图片可看大图 / 保存。收款码在仓库里**只存这一份**（`app/src/main/res/drawable/reward_qr_*.jpg`）：App 内打赏弹窗与这里引用的是同一张图，换码只需替换这两个文件。
+
+</details>
 
 <!-- 参考式定义：表格里的 [qr-wechat] / [qr-alipay] 指向下面两个路径，
      这样长路径在文中只出现一次，单元格不会被长 URL 撑爆 -->
