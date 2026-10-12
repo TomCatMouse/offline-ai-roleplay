@@ -29,7 +29,12 @@
 **不进本仓库** —— 其中既有本项目自编的产物，也有来自上游与设备的高通闭源库，体积与许可都不适合入库。
 缺了它们 `:app:assemblePhysRelease` 会在打包阶段提示缺少 jniLibs。
 
-本项目采用**自行编译**的方式准备，共三步。完整配方、自检命令与踩坑记录见
+两种取得方式：
+
+1. **下载现成压缩包（最快）**：从 [Releases](https://github.com/TomCatMouse/offline-ai-roleplay/releases/latest)
+   下载 `engine-libs-arm64-v8a-b11558.zip`（59 MB），解压到项目根目录 —— 解压后即
+   `models/android-snapdragon/jniLibs/arm64-v8a/` 下的 27 个 `.so`（sha256 以 `6E9B6F4C` 开头）。
+2. **自己编译（正统做法）**：完整配方、自检命令与踩坑记录见
 [`docs/android-armv8.2-engine-rebuild.md`](docs/android-armv8.2-engine-rebuild.md)：
 
 1. **自编 16 个引擎库（最关键的一步）**：官方预编译包是 ARMv8.6 口径，在骁龙 855/865/870/888 上一启动就 SIGILL，
@@ -52,6 +57,8 @@ powershell -File scripts\setup-engine-libs.ps1
 
 若提示脚本被禁止运行，改用 `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\setup-engine-libs.ps1`。
 看到「期望 27 ｜ 缺失 0 ｜ 多余 0」即可构建真机包。
+
+完整的从零构建步骤（环境要求、命令、常见问题）见 **[BUILD.md](BUILD.md)**。
 
 > 只想先跑起来、不想折腾引擎？**默认包**（模拟器 / PC 引擎模式）完全不需要这些库：
 > `gradlew.bat :app:assembleDebug`

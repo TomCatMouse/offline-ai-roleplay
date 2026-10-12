@@ -15,6 +15,8 @@
 > `smmla×420`；官方包**只能**提供 Hexagon skel 与设备库那部分。
 > §5.x 历史小节记录 b11523 / b11550 时代的排障结论，方法仍然适用。
 > 命令中的 `<repo>` / `<tmp>` / `<AndroidSDK>` 是占位符，分别替换为你的仓库根目录、临时目录与 Android SDK 根目录。
+> 只是想把项目构建起来、不打算自己编引擎？直接下载 Releases 里的 `engine-libs-arm64-v8a-b11558.zip`
+> 解压到项目根目录即可，见根目录 [BUILD.md](../BUILD.md)。
 
 ## 0. 结论速查
 

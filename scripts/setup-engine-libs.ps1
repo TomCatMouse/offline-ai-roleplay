@@ -61,15 +61,17 @@ if ($extra.Count -gt 0) {
 
 if ($missing.Count -gt 0) {
     Write-Host ""
-    Write-Host "获取方式（自行编译，完整配方见 docs/android-armv8.2-engine-rebuild.md）：" -ForegroundColor Cyan
-    Write-Host "  1) 18 个 —— 自编 16 个引擎库（§1 源码准备 → §2 构建 → §3 自检 → §4 入库；"
-    Write-Host "             切记 §5.10：libggml.so 必须带 Hexagon 注册宏）"
-    Write-Host "            + 改名后的 libllama-server.so + 取自 NDK clang 19 的 libomp.so"
-    Write-Host "  2)  8 个 —— 上游 llama.cpp Android snapdragon 预编译包里的 libggml-hexagon.so、"
-    Write-Host "             libggml-htp-v73/75/79/81.so、libcdsprpc.so、libvmmem.so、vndk_dsp_10.so"
-    Write-Host "             （CPU / OpenCL / llama 系列库务必用自编产物，原因见 §5.14）"
-    Write-Host "  3)  1 个 —— 从目标设备提取：adb pull /vendor/lib64/libOpenCL.so"
-    Write-Host "             （厂商实现，受其自身许可约束，再分发前请自行确认）"
+    Write-Host "获取方式（详见根目录 BUILD.md 第 1 步）：" -ForegroundColor Cyan
+    Write-Host "  1) 最快 —— 到 Releases 下载 engine-libs-arm64-v8a-b11558.zip（59 MB），"
+    Write-Host "             解压到项目根目录，即得到 jniLibs/arm64-v8a 下这 27 个文件"
+    Write-Host "  2) 自行编译（完整配方见 docs/android-armv8.2-engine-rebuild.md）："
+    Write-Host "     - 18 个：自编 16 个引擎库（第 1 节源码 → 第 2 节构建 → 第 3 节自检 → 第 4 节入库；"
+    Write-Host "              注意第 5 节第 10 小节：libggml.so 必须带 Hexagon 注册宏）"
+    Write-Host "              + 改名后的 libllama-server.so + 取自 NDK clang 19 的 libomp.so"
+    Write-Host "     -  8 个：上游 llama.cpp Android snapdragon 预编译包里的 libggml-hexagon.so、"
+    Write-Host "              libggml-htp-v73/75/79/81.so、libcdsprpc.so、libvmmem.so、vndk_dsp_10.so"
+    Write-Host "              （CPU / OpenCL / llama 系列库务必用自编产物，原因见第 5 节第 14 小节）"
+    Write-Host "     -  1 个：adb pull /vendor/lib64/libOpenCL.so（厂商实现，受其自身许可约束）"
     Write-Host ""
     exit 1
 }

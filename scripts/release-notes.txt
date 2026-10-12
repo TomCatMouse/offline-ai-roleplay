@@ -1,5 +1,10 @@
 内置骁龙 llama.cpp 引擎，仅 arm64-v8a，离线本地推理，全程不联网。
 
+## 发布资源
+
+- `AI-Roleplay-v1.0.2-phys.apk`：正式版安装包，下载后直接安装即可
+- `engine-libs-arm64-v8a-b11558.zip`（59 MB，sha256 以 `6E9B6F4C` 开头）：真机包所需的骁龙引擎库，**只有在自己构建真机包时才需要** —— 解压到项目根目录即可（解压后为 `models/android-snapdragon/jniLibs/arm64-v8a/` 下的 27 个 `.so`），详见仓库根目录 [BUILD.md](https://github.com/TomCatMouse/offline-ai-roleplay/blob/main/BUILD.md) 第 1 步
+
 ## 本次更新
 
 - **推理引擎升级到 llama.cpp b11558**：真机端 16 个引擎库按 `armv8.2-a+dotprod` 从源码重编（官方预编译包是 ARMv8.6，在骁龙 855/865/870/888 上会执行到 `stlur`/`smmla` 直接 SIGILL），PC / 模拟器端同步升级到 `b11558`

@@ -79,8 +79,9 @@ __pycache__/
 
 # ---------- 6.6) 骁龙引擎库：不入库（2026-10-12 起）----------
 # 27 个文件 / 245.7 MB，占仓库体积 98.5%；且其中的 libOpenCL.so 是从设备提取的厂商实现、
-# 受其自身许可约束，不适合随仓库再分发。构建真机包前请按 README「引擎库准备」自行编译：
-# 18 个自编（libomp.so 取 NDK）+ 8 个取自上游 llama.cpp 的 Android snapdragon 包 + 1 个从设备提取。
+# 受其自身许可约束，不适合随仓库再分发。构建真机包前请按 BUILD.md 第 1 步准备：
+# ① 从 Releases 下载 engine-libs-arm64-v8a-b11558.zip（59 MB）解压到项目根目录（最快）；
+# ② 或按 docs/android-armv8.2-engine-rebuild.md 自行编译（18 自编 + 8 上游 + 1 设备 = 27）。
 # 自检：powershell -File scripts\setup-engine-libs.ps1
 /models/android-snapdragon/jniLibs/
 
