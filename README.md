@@ -157,6 +157,8 @@ set ROLEPLAY_HOST=192.168.1.100 && python test_http.py   # 打 PC 的局域网 I
 
 </div>
 
+<div align="center">
+
 <details>
 <summary><b>👉 点我展开打赏码（微信 / 支付宝）👈</b></summary>
 
@@ -171,6 +173,8 @@ set ROLEPLAY_HOST=192.168.1.100 && python test_http.py   # 打 PC 的局域网 I
 </div>
 
 </details>
+
+</div>
 
 <!-- 参考式定义：表格里的 [qr-wechat] / [qr-alipay] 指向下面两个路径，
      这样长路径在文中只出现一次，单元格不会被长 URL 撑爆 -->
