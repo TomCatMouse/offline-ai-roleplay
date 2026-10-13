@@ -81,3 +81,4 @@ Write-Host "next steps:" -ForegroundColor Cyan
 Write-Host "  git add app/build.gradle.kts"
 Write-Host ("  git commit -m `"chore: bump version to " + $newVn + "`"")
 Write-Host "  git push origin main"
+Write-Host "  powershell -File scripts\install-emulator.ps1    # sync default + phys packages to the emulator" -ForegroundColor Cyan

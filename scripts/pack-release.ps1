@@ -1,4 +1,4 @@
-# Pack release APK: build + output to dist\<CN_DIR>  (does NOT bump the version by default)
+﻿# Pack release APK: build + output to dist\<CN_DIR>  (does NOT bump the version by default)
 #
 # Usage:
 #   .\scripts\pack-release.ps1                # default: keep the current version, just build
