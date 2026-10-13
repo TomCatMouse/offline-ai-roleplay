@@ -15,6 +15,13 @@
 # It only rewrites versionName / versionCode inside app/build.gradle.kts and prints
 # the suggested git commands. It does NOT build, commit or push anything.
 #
+# Commit message convention (user requirement, 2026-10-13):
+#   Keep this post-release commit NEUTRAL and short:
+#       chore: bump version to <next version>
+#   Do NOT write a release narrative in the subject (no "1.0.5 released, next ...").
+#   That subject lands in the public commit list and in the release page's
+#   "commits since this release" comparison, and was explicitly not wanted there.
+#
 # This file is intentionally pure ASCII (PowerShell 5.1 reads .ps1 as ANSI unless a
 # BOM is present, so non-ASCII text here could be mangled).
 
@@ -72,5 +79,5 @@ Write-Host ""
 Write-Host "updated : app\build.gradle.kts" -ForegroundColor Green
 Write-Host "next steps:" -ForegroundColor Cyan
 Write-Host "  git add app/build.gradle.kts"
-Write-Host ("  git commit -m `"chore(version): " + $vn + " released, next " + $newVn + " (versionCode " + $newVc + ")`"")
+Write-Host ("  git commit -m `"chore: bump version to " + $newVn + "`"")
 Write-Host "  git push origin main"

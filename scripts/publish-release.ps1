@@ -22,6 +22,9 @@
 #      next version (patch +1 and versionCode +1), then commit and push. The version
 #      number only ever advances after a release has actually gone out; before that,
 #      every local build keeps the current version.
+#      Keep that commit's subject neutral and short ("chore: bump version to X.Y.Z"):
+#      it becomes part of the public commit list / the release page comparison, so it
+#      should not narrate the release (user requirement, 2026-10-13).
 #
 # IMPORTANT - GitHub asset name limitation:
 #   GitHub release asset names must be ASCII. Non-ASCII characters are
