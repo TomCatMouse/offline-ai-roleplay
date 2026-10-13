@@ -1,0 +1,65 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# 重要提醒（实测结论）：本仓库的 gradlew.bat 在构建 **失败** 时返回的退出码也是 0，
+# 所以工作流里一律不能靠 $LASTEXITCODE 判断成败，必须校验构建输出里的
+# 「BUILD SUCCESSFUL」/「BUILD FAILED」。
+
+jobs:
+  debug:
+    name: 默认包构建（不需要引擎库）
+    # 本仓库只提供 gradlew.bat（没有 unix 的 gradlew），且构建文档以 Windows 为准，
+    # 所以这里固定用 windows-latest，避免 ubuntu 上找不到 ./gradlew 直接失败。
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      - name: 构建默认包
+        shell: pwsh
+        run: |
+          $out = (& .\gradlew.bat :app:assembleDebug --no-daemon --console=plain --stacktrace 2>&1 | Out-String)
+          $out.TrimEnd() -split "`r?`n" | ForEach-Object { Write-Host $_ }
+          if ($out -notmatch "BUILD SUCCESSFUL") {
+            Write-Host "::error::默认包构建失败"
+            exit 1
+          }
+
+      - name: 上传 APK（供人工验证）
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      # CI 里 engine/ 目录必然不存在（该目录不入库），正好用来验证：
+      # 真机包在缺少引擎库时一定会被守卫拦下，而不是静默打出一个没有引擎的废包。
+      - name: 守卫自检（缺引擎库时必须报错且不产出废包）
+        shell: pwsh
+        run: |
+          $out = (& .\gradlew.bat :app:assemblePhys --no-daemon --console=plain 2>&1 | Out-String)
+          if ($out -notmatch "MISSING_ENGINE_LIBS") {
+            Write-Host "::error::assemblePhys 没有被引擎库守卫拦下 —— 守卫可能失效了，会静默产出没有引擎的废包"
+            exit 1
+          }
+          if ($out -notmatch "BUILD FAILED") {
+            Write-Host "::error::守卫虽然报了错，但构建并没有失败，请检查日志"
+            exit 1
+          }
+          $apk = @(Get-ChildItem -Path app/build/outputs/apk/phys -Filter *.apk -ErrorAction SilentlyContinue)
+          if ($apk.Count -ne 0) {
+            Write-Host "::error::守卫报错了却仍产出 $($apk.Count) 个 phys APK —— 废包没有被杜绝"
+            exit 1
+          }
+          Write-Host "OK: 守卫按预期拦下了缺少引擎库的真机包构建，且没有产出任何废包"
